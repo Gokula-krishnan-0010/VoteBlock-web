@@ -1,5 +1,6 @@
 import './globals.css';
 import Link from 'next/link';
+import Navbar from '../components/Navbar';
 
 export const metadata = {
   title: 'VoteBlock',
@@ -10,7 +11,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <header className="header">
+        <Navbar />
+
+        <div className="main-content">
+          {children}
+        </div>
+
+         {/* <header className="header">
           <div className="header-container">
             <h1 className="logo">VoteBlock</h1>
 
@@ -21,11 +28,7 @@ export default function RootLayout({ children }) {
               <Link href="/logout">Logout</Link>
             </nav>
           </div>
-        </header>
-
-        <div className="main-content">
-          {children}
-        </div>
+        </header> */}
       </body>
     </html>
   );
