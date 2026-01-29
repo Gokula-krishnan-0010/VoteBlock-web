@@ -1,3 +1,9 @@
+/* app/globals.css or styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 /* Reset */
 * {
   margin: 0;
