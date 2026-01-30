@@ -1,101 +1,70 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 const VoterProfile = () => {
-  const [voterInfo, setVoterInfo] = useState({
+  const voterInfo = {
     name: 'John Doe',
-    location: 'New York',
-    gender: 'Male',
     voterId: 'V12345678',
-    voted: false,
-  });
+    aadhaarCard: 'XXXX-XXXX-9012',
+    walletAddress: '0x71C7...E921',
+    constituency: 'Central District',
+    status: 'Verified',
+    location: 'Chennai, Tamil Nadu',
+    profilePic: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
+  };
 
+  // Inline styles to bypass broken Tailwind setup
   const styles = {
-    container: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '100vh',
-      backgroundColor: '#f8f9fa',
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      color: '#333',
-    },
-    card: {
-      padding: '40px',
-      borderRadius: '8px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-      backgroundColor: '#ffffff',
-      textAlign: 'center',
-      width: '380px',
-      borderTop: '5px solid #005A9C',
-    },
-    profileImage: {
-      borderRadius: '50%',
-      width: '120px',
-      height: '120px',
-      objectFit: 'cover',
-      marginBottom: '20px',
-      border: '4px solid #f0f0f0'
-    },
-    heading: {
-      marginBottom: '25px',
-      color: '#005A9C',
-      fontSize: '24px'
-    },
-    infoGrid: {
-      textAlign: 'left',
-      marginBottom: '30px',
-      display: 'grid',
-      gridTemplateColumns: '1fr 2fr',
-      gap: '15px'
-    },
-    infoLabel: {
-      fontWeight: 'bold',
-      color: '#555'
-    },
-    infoValue: {
-      color: '#333'
-    },
-    status: {
-      color: voterInfo.voted ? '#28a745' : '#dc3545',
-      fontWeight: 'bold'
-    },
-    button: {
-      display: 'inline-block',
-      padding: '12px 24px',
-      color: 'white',
-      backgroundColor: '#005A9C',
-      borderRadius: '5px',
-      textDecoration: 'none',
-      fontWeight: 'bold',
-      transition: 'background-color 0.3s ease',
-      border: 'none',
-      cursor: 'pointer'
-    }
+    container: { padding: '40px 20px', maxWidth: '900px', margin: '0 auto', fontFamily: 'sans-serif' },
+    card: { background: '#1e293b', borderRadius: '24px', padding: '30px', border: '1px solid #334155', marginBottom: '30px', display: 'flex', alignItems: 'center', gap: '24px' },
+    avatar: { width: '100px', height: '100px', borderRadius: '16px', border: '3px solid #38bdf8', objectFit: 'cover' },
+    grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' },
+    infoBox: { background: '#0f172a', padding: '20px', borderRadius: '16px', border: '1px solid #1e293b' },
+    label: { color: '#94a3b8', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', display: 'block' },
+    value: { color: '#f8fafc', fontSize: '16px', fontWeight: 'bold' },
+    button: { display: 'block', width: 'fit-content', margin: '40px auto', background: '#38bdf8', color: '#020617', padding: '16px 40px', borderRadius: '12px', fontWeight: 'bold', textDecoration: 'none', textAlign: 'center' }
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Profile" style={styles.profileImage} />
-        <h1 style={styles.heading}>Voter Profile</h1>
-        <div style={styles.infoGrid}>
-          <strong style={styles.infoLabel}>Name:</strong>
-          <span style={styles.infoValue}>{voterInfo.name}</span>
-          <strong style={styles.infoLabel}>Location:</strong>
-          <span style={styles.infoValue}>{voterInfo.location}</span>
-          <strong style={styles.infoLabel}>Gender:</strong>
-          <span style={styles.infoValue}>{voterInfo.gender}</span>
-          <strong style={styles.infoLabel}>Voter ID:</strong>
-          <span style={styles.infoValue}>{voterInfo.voterId}</span>
-          <strong style={styles.infoLabel}>Status:</strong>
-          <span style={styles.status}>{voterInfo.voted ? 'Voted' : 'Not Voted'}</span>
+        <img src={voterInfo.profilePic} style={styles.avatar} alt="Voter" />
+        <div>
+          <h1 style={{ fontSize: '28px', margin: '0 0 5px 0', color: 'white' }}>{voterInfo.name}</h1>
+          <p style={{ color: '#38bdf8', margin: 0, fontSize: '14px' }}>{voterInfo.walletAddress} • <span style={{color: '#4ade80'}}>● {voterInfo.status}</span></p>
         </div>
-        <Link href="../voter/dashboard" style={styles.button}>
-          Proceed to Voting
-        </Link>
       </div>
+
+      <div style={styles.grid}>
+        <div style={styles.infoBox}>
+          <h3 style={{color: '#64748b', fontSize: '14px', marginBottom: '20px'}}>ID CREDENTIALS</h3>
+          <div style={{marginBottom: '15px'}}>
+             <span style={styles.label}>Voter ID</span>
+             <span style={styles.value}>{voterInfo.voterId}</span>
+          </div>
+          <div>
+             <span style={styles.label}>Aadhaar Number</span>
+             <span style={styles.value}>{voterInfo.aadhaarCard}</span>
+          </div>
+        </div>
+
+        <div style={styles.infoBox}>
+          <h3 style={{color: '#64748b', fontSize: '14px', marginBottom: '20px'}}>VOTING JURISDICTION</h3>
+          <div style={{marginBottom: '15px'}}>
+             <span style={styles.label}>Constituency</span>
+             <span style={styles.value}>{voterInfo.constituency}</span>
+          </div>
+          <div>
+             <span style={styles.label}>Current Location</span>
+             <span style={styles.value}>{voterInfo.location}</span>
+          </div>
+        </div>
+      </div>
+
+      <Link href="/voter/dashboard" style={styles.button}>
+        PROCEED TO SECURE BALLOT
+      </Link>
     </div>
   );
 };

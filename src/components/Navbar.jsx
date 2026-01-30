@@ -17,6 +17,7 @@ export default function Navbar() {
                 if (accounts.length > 0) {
                     setConnectedWallet(accounts[0]);
                     setWalletStatus('success');
+                    console.log("Wallet connected: ", accounts[2]);
                 }
             }
         };
@@ -86,8 +87,11 @@ export default function Navbar() {
 
                 <nav className="nav">
                     <Link href="/">Home</Link>
-                    <Link href="/voter/dashboard">Voter</Link>
-                    <Link href="/admin/dashboard">Admin</Link>
+                    <Link href="/voter/dashboard">Voter Dashboard</Link>
+                    <Link href="/voter/profile">Voter Profile</Link>
+                    <Link href="/admin/dashboard">Admin Dashboard</Link>
+                    <Link href="/admin/details">Admin Details</Link>
+                    <Link href="/blockchain/visualization">Blockchain Visualization</Link>
                     <Link href="/logout">Logout</Link>
 
                     <button
