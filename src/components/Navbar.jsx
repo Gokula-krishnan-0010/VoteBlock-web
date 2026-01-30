@@ -87,13 +87,13 @@ export default function Navbar() {
 
                 <nav className="nav">
                     <Link href="/">Home</Link>
-                    <Link href="/voter/dashboard">Voter Dashboard</Link>
-                    <Link href="/voter/dashboard2">Voter Dashboard 2</Link>
-                    <Link href="/voter/profile">Voter Profile</Link>
+                    {/*<Link href="/voter/dashboard">Voter Dashboard</Link>*/}
+                    {/*<Link href="/voter/dashboard2">Dashboard</Link>*/}
+                    <Link href="/voter/profile">Voter</Link>
                     {/* <Link href="/admin/dashboard">Admin Dashboard</Link> */}
-                    <Link href="/admin/details">Admin Details</Link>
-                    <Link href="/blockchain/visualization">Blockchain Visualization</Link>
-                    <Link href="/logout">Logout</Link>
+                    <Link href="/admin/details">Admin</Link>
+                    <Link href="/blockchain/visualization">Ledger</Link>
+                    {/*<Link href="/logout">Logout</Link>*/}
 
                     <button
                         onClick={connectWallet}

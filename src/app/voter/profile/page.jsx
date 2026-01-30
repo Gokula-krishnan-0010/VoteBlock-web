@@ -62,7 +62,7 @@ const VoterProfile = () => {
         </div>
       </div>
 
-      <Link href="/voter/dashboard" style={styles.button}>
+      <Link href="/voter/dashboard2" style={styles.button}>
         PROCEED TO SECURE BALLOT
       </Link>
     </div>
