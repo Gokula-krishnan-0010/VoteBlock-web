@@ -594,7 +594,7 @@ const VoteBlockLayout = () => {
           style={styles.primaryButton} 
           onClick={() => {
             setShowModal(true)
-            router.push('/voter/profile');
+            router.push('/login');
           }}
         >
           Get Started
