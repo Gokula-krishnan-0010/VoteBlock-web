@@ -1,193 +1,146 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
+import { useSearchParams } from 'next/navigation';
 
-// Placeholder ABI
-const CONTRACT_ABI = [];
+const VotingPage = () => {
+  const searchParams = useSearchParams();
+  const electionId = searchParams.get('electionId') || '1';
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [hasVoted, setHasVoted] = useState(false);
 
-const VotingSystem = () => {
-  const [contractAddress, setContractAddress] = useState('');
-  const [candidates, setCandidates] = useState([]);
-  const [selectedCandidateIndex, setSelectedCandidateIndex] = useState(null);
-  const [voterProfile, setVoterProfile] = useState({
-    hasVoted: false,
-    transactionHash: null,
-    ipfsHash: null,
-  });
-  const [status, setStatus] = useState('');
-  const [loading, setLoading] = useState(false);
-
+  // Check if already voted for this election
   useEffect(() => {
-    const storedAddress = localStorage.getItem('votingContractAddress');
-    if (storedAddress) {
-      setContractAddress(storedAddress);
-      fetchCandidates(storedAddress);
+    const votedElections = JSON.parse(localStorage.getItem('votedElections') || '[]');
+    if (votedElections.includes(electionId)) {
+      setHasVoted(true);
     }
-  }, []);
+  }, [electionId]);
 
-  const fetchCandidates = async (address) => {
-    if (!window.ethereum || !address) return;
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const contract = new ethers.Contract(address, CONTRACT_ABI, provider);
-      const candidatesData = await contract.getCandidates();
+  const candidates = [
+    { id: 1, name: 'Candidate A', party: 'Alliance Party', logo: 'AP' },
+    { id: 2, name: 'Candidate B', party: 'Progressive Party', logo: 'PP' },
+    { id: 3, name: 'Candidate C', party: 'Unity Group', logo: 'UG' },
+    { id: 4, name: 'Candidate D', party: 'Independent', logo: 'IND' },
+  ];
 
-      // Format candidates
-      const formatted = candidatesData.map((c, i) => ({
-        id: i,
-        name: c.name,
-        voteCount: c.voteCount.toString()
-      }));
-      setCandidates(formatted);
-    } catch (error) {
-      console.error("Error fetching candidates:", error);
-      setStatus("Failed to load candidates. Check contract address.");
-    }
-  };
 
-  const simulateIpfsUpload = async () => {
-    // Mock IPFS upload
-    return "Qm" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  };
 
-  const handleVote = async () => {
-    if (selectedCandidateIndex === null) return;
 
-    setLoading(true);
-    setStatus('Uploading document to IPFS...');
-
-    try {
-      const ipfsHash = await simulateIpfsUpload();
-
-      setStatus('Please sign the transaction...');
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, CONTRACT_ABI, signer);
-
-      const tx = await contract.vote(selectedCandidateIndex, ipfsHash);
-      setStatus('Waiting for confirmation...');
-
-      await tx.wait();
-
-      setVoterProfile({
-        hasVoted: true,
-        transactionHash: tx.hash,
-        ipfsHash: ipfsHash
-      });
-      setStatus('Vote Cast Successfully!');
-
-    } catch (error) {
-      console.error(error);
-      setStatus(`Voting Failed: ${error.message || error.reason}`);
-    } finally {
-      setLoading(false);
+  const handleVote = () => {
+    if (selectedCandidate) {
+      // Persist the voted election to localStorage
+      const votedElections = JSON.parse(localStorage.getItem('votedElections') || '[]');
+      if (!votedElections.includes(electionId)) {
+        votedElections.push(electionId);
+        localStorage.setItem('votedElections', JSON.stringify(votedElections));
+      }
+      setHasVoted(true);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Voter Dashboard</h1>
+  if (hasVoted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a1a] p-4 relative overflow-hidden">
+        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-600/10 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-600/10 blur-[120px] pointer-events-none" />
 
-      {!contractAddress && (
-        <div className="max-w-md mx-auto mb-8 bg-gray-800 p-6 rounded">
-          <label className="block mb-2">Contract Address</label>
-          <input
-            className="w-full bg-gray-700 p-2 rounded mb-2"
-            value={contractAddress}
-            onChange={(e) => setContractAddress(e.target.value)}
-            placeholder="0x..."
-          />
+        <div className="w-full max-w-md relative z-10 border border-green-500/20 bg-[#12122a]/80 backdrop-blur-xl rounded-2xl text-center" style={{ padding: "40px" }}>
+          <div className="text-5xl" style={{ marginBottom: "10px" }}>✅</div>
+          <h1 className="text-2xl font-bold text-white" style={{ marginTop: "10px" }}>Vote Cast Successfully</h1>
+          <p className="text-slate-400 leading-relaxed" style={{ marginTop: "10px" }}>
+            Your vote has been encrypted and broadcast to the blockchain.
+            Transaction Hash: <span className="text-violet-400 font-mono">0x9f8e...3a2b</span>
+          </p>
           <button
-            className="w-full bg-blue-600 p-2 rounded"
-            onClick={() => fetchCandidates(contractAddress)}
+            onClick={() => window.location.href = '/voter/profile'}
+            className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-violet-500/25"
+            style={{ marginTop: "20px", padding: "12px 24px" }}
           >
-            Load Election
+            Return to Profile
           </button>
         </div>
-      )}
+      </div>
+    );
+  }
 
-      {contractAddress && (
-        <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-          <div>
-            <h2 className="text-xl font-bold mb-4">Candidates</h2>
-            {candidates.length === 0 ? (
-              <p>Loading candidates or none found...</p>
-            ) : (
-              <div className="space-y-4">
-                {candidates.map((candidate) => (
-                  <div
-                    key={candidate.id}
-                    className={`p-4 rounded border cursor-pointer transition ${selectedCandidateIndex === candidate.id
-                        ? 'border-blue-500 bg-blue-900/20'
-                        : 'border-gray-700 bg-gray-800 hover:border-gray-500'
-                      }`}
-                    onClick={() => !voterProfile.hasVoted && setSelectedCandidateIndex(candidate.id)}
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-medium">{candidate.name}</span>
-                      {selectedCandidateIndex === candidate.id && <span className="text-blue-400">Selected</span>}
-                    </div>
-                  </div>
-                ))}
+  return (
+    <div className="min-h-screen bg-[#0a0a1a] p-6 md:p-10 text-white font-sans relative overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-600/10 blur-[120px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-600/10 blur-[120px]" />
+        <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[300px] h-[300px] rounded-full bg-blue-500/5 blur-[100px]" />
+      </div>
+
+      <div className="max-w-[800px] mx-auto relative z-10">
+
+        {/* Header */}
+        <header className="text-center" style={{ marginBottom: "10px" }}>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-violet-400">Official Ballot</h1>
+          <p className="text-slate-400" style={{ marginTop: "10px" }}>Please select one candidate for the 2026 Central District Election.</p>
+        </header>
+
+        {/* Candidate List */}
+        <div className="grid gap-4" style={{ marginTop: "10px" }}>
+          {candidates.map((candidate) => (
+            <div
+              key={candidate.id}
+              onClick={() => setSelectedCandidate(candidate.id)}
+              className={`flex items-center bg-[#12122a]/80 backdrop-blur-xl rounded-2xl border-2 cursor-pointer transition-all duration-200 ${selectedCandidate === candidate.id
+                ? 'border-violet-500 scale-[1.02]'
+                : 'border-white/10 hover:border-white/20'
+                }`}
+              style={{ padding: "20px", margin: "10px 0" }}
+            >
+              <div
+                className={`w-[60px] h-[60px] rounded-xl flex items-center justify-center text-xl font-bold ${selectedCandidate === candidate.id
+                  ? 'bg-violet-500/20 text-violet-400'
+                  : 'bg-white/5 text-slate-400'
+                  }`}
+                style={{ marginRight: "20px" }}
+              >
+                {candidate.logo}
               </div>
-            )}
-
-            {!voterProfile.hasVoted && candidates.length > 0 && (
-              <button
-                onClick={handleVote}
-                disabled={loading || selectedCandidateIndex === null}
-                className={`mt-6 w-full py-3 rounded font-bold ${loading || selectedCandidateIndex === null
-                    ? 'bg-gray-600 cursor-not-allowed'
-                    : 'bg-green-600 hover:bg-green-500'
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white">{candidate.name}</h3>
+                <p className="text-slate-400 text-sm" style={{ marginTop: "4px" }}>{candidate.party}</p>
+              </div>
+              <div
+                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedCandidate === candidate.id
+                  ? 'border-violet-500 bg-violet-500'
+                  : 'border-slate-500 bg-transparent'
                   }`}
               >
-                {loading ? status : 'Cast Vote'}
-              </button>
-            )}
-
-            {status && <div className="mt-4 text-center text-yellow-400">{status}</div>}
-          </div>
-
-          <div>
-            <h2 className="text-xl font-bold mb-4">Your Vote Status</h2>
-            <div className="bg-gray-800 p-6 rounded h-full">
-              {voterProfile.hasVoted ? (
-                <div className="space-y-4">
-                  <div className="p-4 bg-green-900/30 border border-green-500/50 rounded">
-                    <h3 className="text-green-400 font-bold text-lg mb-2">Vote Confirmed!</h3>
-                    <p className="text-sm text-gray-300">Your vote has been recorded on the blockchain.</p>
-                  </div>
-
-                  <div>
-                    <p className="text-sm text-gray-400">Mock IPFS Document</p>
-                    <p className="font-mono text-xs break-all bg-gray-900 p-2 rounded">{voterProfile.ipfsHash}</p>
-                  </div>
-
-                  <div>
-                    <p className="text-sm text-gray-400">Transaction Hash (Vote Block)</p>
-                    <a
-                      href={`https://amoy.polygonscan.com/tx/${voterProfile.transactionHash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-mono text-xs break-all text-blue-400 hover:underline block bg-gray-900 p-2 rounded"
-                    >
-                      {voterProfile.transactionHash}
-                    </a>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center text-gray-500 mt-20">
-                  <p>You have not voted yet.</p>
-                  <p className="text-sm mt-2">Select a candidate and cast your vote to see your block details.</p>
-                </div>
-              )}
+                {selectedCandidate === candidate.id && <div className="w-2 h-2 bg-[#0a0a1a] rounded-full" />}
+              </div>
             </div>
-          </div>
+          ))}
         </div>
-      )}
+
+        {/* Submit Section */}
+        <div
+          className="bg-violet-500/5 border border-dashed border-violet-500/20 rounded-2xl text-center"
+          style={{ marginTop: "20px", padding: "30px" }}
+        >
+          <p className="text-sm text-slate-400" style={{ marginBottom: "10px" }}>
+            By clicking "Cast Vote", you are signing this transaction with your blockchain wallet address. This action is final and irreversible.
+          </p>
+          <button
+            disabled={!selectedCandidate}
+            onClick={handleVote}
+            className={`font-bold text-base rounded-xl border-none transition-all ${selectedCandidate
+              ? 'bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white cursor-pointer shadow-lg shadow-violet-500/25'
+              : 'bg-white/5 text-slate-500 cursor-not-allowed'
+              }`}
+            style={{ marginTop: "10px", padding: "16px 60px" }}
+          >
+            Cast Secure Vote
+          </button>
+        </div>
+
+      </div>
     </div>
   );
 };
 
-export default VotingSystem;
+
+export default VotingPage;

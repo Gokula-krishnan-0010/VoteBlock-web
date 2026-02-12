@@ -10,7 +10,11 @@
     "lint:fix": "eslint --fix"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
     "bcrypt": "^6.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "ethers": "^6.16.0",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.562.0",
@@ -18,10 +22,15 @@
     "next": "16.1.1",
     "nodemailer": "^7.0.12",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
     "@tailwindcss/postcss": "^4",
+    "@types/react": "19.2.14",
     "autoprefixer": "^10.4.23",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",

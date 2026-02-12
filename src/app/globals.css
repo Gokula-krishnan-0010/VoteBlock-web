@@ -1,8 +1,4 @@
-/* app/globals.css or styles/globals.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+@import "tailwindcss";
 
 /* Reset */
 * {
@@ -14,55 +10,33 @@
 
 /* Background */
 body {
-  background: linear-gradient(135deg, #0f172a, #020617);
+  background: #020617;
+  /* Deepest slate/black */
   color: #e5e7eb;
   min-height: 100vh;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
-/* Header */
-.header {
-  background-color: #112066;
-  border-bottom: 1px solid #1e293b;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-.header-container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+::-webkit-scrollbar-track {
+  background: #0f172a;
 }
 
-/* Logo */
-.logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: #38bdf8;
-  letter-spacing: 0.5px;
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 5px;
 }
 
-/* Navigation */
-.nav {
-  display: flex;
-  gap: 20px;
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
 
-.nav a {
-  text-decoration: none;
-  color: #cbd5f5;
-  font-size: 15px;
-  transition: color 0.2s ease;
-}
-
-.nav a:hover {
-  color: #38bdf8;
-}
-
-/* Main content */
+/* Main content - Removed constraints for full width */
 .main-content {
-  max-width: 1200px;
-  margin: auto;
-  padding: 40px 24px;
+  width: 100%;
 }
-
