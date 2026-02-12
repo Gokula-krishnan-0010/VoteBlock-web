@@ -152,27 +152,10 @@ export default function VoteBlockTestPage() {
                 </header>
 
                 <main className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    {/* Admin Panel */}
-                    <section className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
-                        <h2 className="text-xl font-semibold mb-4 text-yellow-500">Admin Panel</h2>
-                        <p className="text-sm text-gray-400 mb-4 italic">Only the account that deployed the contract can use this.</p>
-                        <div className="flex gap-2">
-                            <input
-                                type="text"
-                                placeholder="Candidate Name"
-                                className="flex-1 bg-gray-900 border border-gray-600 p-2 rounded text-white focus:outline-none focus:border-blue-500"
-                                value={newCandidateName}
-                                onChange={(e) => setNewCandidateName(e.target.value)}
-                            />
-                            <button
-                                onClick={addCandidate}
-                                disabled={loading || !isOwner}
-                                className="bg-green-600 disabled:bg-gray-600 hover:bg-green-700 px-4 py-2 rounded font-bold transition"
-                            >
-                                {loading ? "..." : "Add"}
-                            </button>
-                        </div>
-                    </section>
+                    {/* Election Status Section (Optional Placeholder) */}
+                    <div className="md:col-span-2 bg-blue-900/20 border border-blue-500/30 p-4 rounded-lg text-center mb-6">
+                        <p className="text-blue-200">Cast your vote securely on the blockchain. One vote per account.</p>
+                    </div>
 
                     {/* Voting Panel */}
                     <section className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
